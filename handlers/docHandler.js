@@ -4,7 +4,6 @@ const path = require("path");
 const https = require("https");
 
 function populateTemplate(name, regno) {
-  console.log("Entered");
   const outputDir = "./output-files";
   const outputFileName = `${name.split(" ")[0].toLowerCase()}-cover.docx`;
   const outputFilePath = path.join(outputDir, outputFileName);

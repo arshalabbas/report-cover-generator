@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const { populateTemplate } = require("./handlers/docHandler");
 const path = require("path");
+const fs = require("fs");
 
 const app = express();
 
@@ -22,13 +23,19 @@ app.post("/download", (req, res) => {
   const docxFileName = populateTemplate(name, regno);
   const docxFilePath = path.join(__dirname, "output-files", docxFileName);
 
-  res.download(docxFilePath, docxFileName, (err) => {
-    if (err) {
-      console.error("Error triggering download:", err);
-      // Handle error as needed
-      res.status(500).send("Internal Server Error");
-    }
-  });
+  setTimeout(() => {
+    res.download(docxFilePath, docxFileName, (err) => {
+      if (err) {
+        console.error("Error triggering download:", err);
+        // Handle error as needed
+        res.status(500).send("Internal Server Error");
+      }
+      fs.unlink(docxFilePath, (err) => {
+        if (err) throw err;
+        console.log("File was deleted");
+      });
+    });
+  }, 5000);
 });
 
 app.listen(3000, () => {
